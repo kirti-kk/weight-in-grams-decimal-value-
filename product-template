@@ -1,0 +1,59 @@
+ weight: <span class="json-data"> {{variant.weight}}</span>
+        <div class="weight-area">Weight :
+        </div>
+        
+<script>
+ function weight_cal(){
+
+    $.getJSON('{{product.url}}.json', function(data){   
+              var total_variant= data.product.variants.length;  
+              for(i=0;i<=total_variant;i++){
+      var li = `<li class="weightid" data-actual_weight="${data.product.variants[i].weight}" data-weight="${data.product.variants[i].id}">${data.product.variants[i].id}-${data.product.variants[i].weight}</li>`;
+      var variantid = $('.weightid').attr('data-weight');
+      $('.weight-area').append(li);
+    }
+  });
+  setTimeout(function(){
+    var pathArray = window.location.search.split('=');
+    if(!pathArray[1]){
+      var weight = document.querySelector('.weight-area li').getAttribute('data-actual_weight');
+      $('.json-data').text(weight + 'g');  
+    }
+    else{
+      $('.weight-area li').each(function(){
+        var weight_gram = $(this).attr('data-weight');
+        if(pathArray[1] == weight_gram){
+          var actual_weight = $(this).attr('data-actual_weight');   
+          $('.json-data').text(actual_weight + 'g');  
+        }
+      });
+    }
+  },500)
+  }
+
+  function weight_final(){
+    setTimeout(function(){
+      var pathArray = window.location.search.split('=');
+      $('.weight-area li').each(function(){
+        var weight_gram = $(this).attr('data-weight');
+        if(pathArray[1] == weight_gram){
+          var actual_weight = $(this).attr('data-actual_weight');   
+          $('.json-data').text(actual_weight + 'g')
+        }
+      });
+
+    },500)
+  }
+
+
+
+  $(document).ready(function() {    
+    weight_cal();  
+
+    $('.variant-swatches').change(function(){
+      weight_final();                             
+    });
+  });
+ 
+
+</script>
